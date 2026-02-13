@@ -1,0 +1,154 @@
+/* ======================
+   GLOBAL STYLING
+====================== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+}
+
+/* ======================
+   HEADER
+====================== */
+header{
+    background:#0a1a4f;
+    color:white;
+    text-align:center;
+    padding:20px;
+    font-size:17px;
+}
+
+/* ======================
+   NAVIGATION (FLEXBOX)
+====================== */
+nav{
+    background:#1e3a8a;
+}
+
+nav ul{
+    list-style:none;
+    display:flex;
+    justify-content:center;
+}
+
+nav ul li{
+    padding:15px 25px;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:white;
+    font-size:17px;
+}
+
+/* ======================
+   ACTIVITY SECTION (GRID)
+====================== */
+.activities{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    padding:30px;
+}
+
+.card{
+    background:#1d4ed8;
+    color:white;
+    padding:40px;
+    text-align:center;
+    border-radius:8px;
+    font-size:17px;
+}
+
+/* ======================
+   GALLERY SECTION (GRID)
+====================== */
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    padding:30px;
+}
+
+.gallery img{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    border-radius:6px;
+    transition:all 0.3s ease;
+}
+
+.gallery img:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* ======================
+   MEDIUM SCREENS
+====================== */
+@media (max-width:1023px){
+
+    header{
+        font-size:15px;
+    }
+
+    nav ul li a{
+        font-size:15px;
+    }
+
+    .card{
+        font-size:15px;
+    }
+
+    .activities{
+        grid-template-columns:repeat(2,1fr);
+        padding:20px;
+    }
+
+    .gallery{
+        grid-template-columns:repeat(3,1fr);
+        padding:20px;
+    }
+}
+
+/* ======================
+   SMALL SCREENS
+====================== */
+@media (max-width:767px){
+
+    header{
+        font-size:13px;
+    }
+
+    nav ul{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    nav ul li a{
+        font-size:13px;
+    }
+
+    .activities{
+        grid-template-columns:1fr;
+        padding:15px;
+    }
+
+    .card{
+        font-size:13px;
+    }
+
+    .gallery{
+        grid-template-columns:1fr;
+        padding:15px;
+    }
+
+    .gallery img{
+        height:250px;
+    }
+}

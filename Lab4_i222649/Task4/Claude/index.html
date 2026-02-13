@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowOS — Smart Workflow Management Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lora:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --teal:       #0fd6c2;
+      --teal-dim:   #0ab5a4;
+      --amber:      #f5a623;
+      --navy:       #080e1a;
+      --navy-mid:   #0e1825;
+      --navy-card:  #111d2e;
+      --navy-border:#1c2e44;
+      --text-main:  #e8f0f7;
+      --text-muted: #7a94b0;
+      --text-faint: #3d5570;
+    }
+
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background-color: var(--navy);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    /* ── Typography ── */
+    .font-display  { font-family: 'Syne', sans-serif; }
+    .font-mono     { font-family: 'IBM Plex Mono', monospace; }
+
+    /* ── Shared Section Spacing ── */
+    .section-pad { padding: 6rem 0; }
+
+    /* ── Teal Glow Utility ── */
+    .teal-glow { color: var(--teal); }
+    .amber-glow { color: var(--amber); }
+
+    /* ══════════════════════════════════════
+       NAV
+    ══════════════════════════════════════ */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8, 14, 26, 0.82);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--teal); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--teal); }
+
+    .nav-cta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: var(--teal);
+      color: var(--navy);
+      padding: 0.45rem 1.2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .nav-cta:hover { background: var(--teal-dim); transform: translateY(-1px); }
+
+    /* Hide nav links on small screens */
+    @media (max-width: 767px) {
+      .nav-links { display: none; }
+    }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    .hero-section {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #060c17 0%, #0b1a30 35%, #071825 60%, #0a1020 100%);
+    }
+
+    /* Animated gradient orbs */
+    .hero-orb-1 {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 214, 194, 0.14) 0%, transparent 65%);
+      top: -200px;
+      left: -100px;
+      animation: orb-drift 12s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    .hero-orb-2 {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 166, 35, 0.10) 0%, transparent 65%);
+      bottom: -100px;
+      right: -80px;
+      animation: orb-drift 16s ease-in-out infinite alternate-reverse;
+      pointer-events: none;
+    }
+
+    .hero-orb-3 {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 214, 194, 0.08) 0%, transparent 65%);
+      top: 40%;
+      left: 55%;
+      pointer-events: none;
+    }
+
+    /* Grid lines overlay */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(15, 214, 194, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 214, 194, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    @keyframes orb-drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(40px, 30px) scale(1.08); }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 7rem 1.5rem 6rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 767px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        padding: 5rem 1.25rem 4rem;
+        gap: 3rem;
+      }
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: rgba(15, 214, 194, 0.08);
+      border: 1px solid rgba(15, 214, 194, 0.2);
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-tag-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .hero-heading {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-heading .line-accent {
+      background: linear-gradient(90deg, var(--teal), #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: var(--teal);
+      color: var(--navy);
+      padding: 0.8rem 1.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.25s, box-shadow 0.25s;
+      box-shadow: 0 0 0 rgba(15, 214, 194, 0);
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(15, 214, 194, 0.3);
+    }
+
+    .btn-secondary {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: transparent;
+      color: var(--text-main);
+      padding: 0.8rem 1.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      border: 1.5px solid var(--navy-border);
+      transition: border-color 0.2s, color 0.2s, transform 0.25s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Illustration */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-dashboard {
+      width: 100%;
+      max-width: 520px;
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(15,214,194,0.06);
+      animation: float-card 6s ease-in-out infinite;
+    }
+
+    @keyframes float-card {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    .dash-titlebar {
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--navy-border);
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dash-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .dash-body { padding: 1.25rem; }
+
+    .dash-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .dash-card-sm {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--navy-border);
+      border-radius: 10px;
+      padding: 0.85rem;
+    }
+
+    .dash-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+
+    .dash-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .dash-value.teal  { color: var(--teal); }
+    .dash-value.amber { color: var(--amber); }
+
+    .dash-bar-wrap {
+      margin-top: 0.4rem;
+      height: 4px;
+      background: var(--navy-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .dash-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--teal), #38bdf8);
+      animation: bar-grow 2s ease forwards;
+    }
+
+    @keyframes bar-grow {
+      from { width: 0; }
+    }
+
+    .dash-task-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.7rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      margin-bottom: 0.45rem;
+    }
+
+    .dash-task-check {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      border: 1.5px solid var(--navy-border);
+      flex-shrink: 0;
+    }
+
+    .dash-task-check.done {
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .dash-task-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .dash-task-badge {
+      margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(15, 214, 194, 0.1);
+      color: var(--teal);
+      border: 1px solid rgba(15,214,194,0.15);
+    }
+
+    .dash-task-badge.amber {
+      background: rgba(245, 166, 35, 0.1);
+      color: var(--amber);
+      border-color: rgba(245,166,35,0.15);
+    }
+
+    /* ══════════════════════════════════════
+       SECTION HEADER SHARED
+    ══════════════════════════════════════ */
+    .section-header { text-align: center; margin-bottom: 4rem; }
+
+    .section-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ══════════════════════════════════════
+       FEATURES
+    ══════════════════════════════════════ */
+    .features-section {
+      background: var(--navy-mid);
+      position: relative;
+    }
+
+    .features-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--navy-border), transparent);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 1023px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 599px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    .feature-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: 14px;
+      padding: 1.8rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-color 0.3s ease,
+                  box-shadow 0.3s ease;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(15,214,194,0.04) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(15, 214, 194, 0.3);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.3), 0 0 0 1px rgba(15,214,194,0.08);
+    }
+
+    .feature-card:hover::after { opacity: 1; }
+
+    .feature-icon-wrap {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(15, 214, 194, 0.08);
+      border: 1px solid rgba(15, 214, 194, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .feature-card:hover .feature-icon-wrap {
+      background: rgba(15, 214, 194, 0.14);
+      border-color: rgba(15, 214, 194, 0.3);
+    }
+
+    .feature-icon-wrap svg {
+      width: 22px; height: 22px;
+      stroke: var(--teal);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .feature-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.55rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ══════════════════════════════════════
+       STATS
+    ══════════════════════════════════════ */
+    .stats-section {
+      background: linear-gradient(135deg, #060d1e 0%, #091520 50%, #060d1e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-bg-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(15,214,194,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,214,194,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    .stats-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+
+    @media (max-width: 767px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 399px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 2rem 1rem;
+      border: 1px solid var(--navy-border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.025);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .stat-item:hover {
+      border-color: rgba(15,214,194,0.25);
+      transform: translateY(-4px);
+    }
+
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-number.c-teal  {
+      background: linear-gradient(135deg, var(--teal), #38bdf8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-number.c-amber {
+      background: linear-gradient(135deg, var(--amber), #fb923c);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .stat-divider {
+      width: 32px; height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      margin: 0.6rem auto 0.8rem;
+      border-radius: 2px;
+    }
+
+    /* ══════════════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════════════ */
+    .testimonials-section {
+      background: var(--navy);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.75rem;
+    }
+
+    @media (max-width: 767px) {
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+
+    .testimonial-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(15,214,194,0.2);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.25);
+    }
+
+    .quote-icon {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.75rem;
+      width: 36px; height: 36px;
+      color: rgba(15,214,194,0.15);
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      padding-right: 2rem;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .testimonial-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(15,214,194,0.25);
+      background: var(--navy-border);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .testimonial-avatar-inner {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--teal);
+      background: linear-gradient(135deg, rgba(15,214,194,0.15), rgba(56,189,248,0.1));
+    }
+
+    .testimonial-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .testimonial-role {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-faint);
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    .stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .star {
+      color: var(--amber);
+      font-size: 0.9rem;
+    }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    .footer-section {
+      background: var(--navy-mid);
+      border-top: 1px solid var(--navy-border);
+    }
+
+    .footer-top {
+      padding: 4rem 0 3rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 1023px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 599px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    .footer-brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .footer-brand-name span { color: var(--teal); }
+
+    .footer-tagline {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+      max-width: 280px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .social-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--navy-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, background 0.2s, transform 0.25s;
+      text-decoration: none;
+    }
+
+    .social-icon svg {
+      width: 16px; height: 16px;
+      fill: var(--text-muted);
+      transition: fill 0.2s;
+    }
+
+    .social-icon:hover {
+      border-color: var(--teal);
+      background: rgba(15,214,194,0.06);
+      transform: translateY(-2px);
+    }
+
+    .social-icon:hover svg { fill: var(--teal); }
+
+    .footer-col-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-links { list-style: none; }
+
+    .footer-links li { margin-bottom: 0.65rem; }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--teal); }
+
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-contact-icon {
+      width: 16px; height: 16px;
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .footer-contact-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--navy-border);
+      padding: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      letter-spacing: 0.04em;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-legal a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover { color: var(--teal); }
+
+    /* ══════════════════════════════════════
+       PAGE-LOAD ANIMATION
+    ══════════════════════════════════════ */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-text-group > * {
+      animation: fade-up 0.7s ease both;
+    }
+
+    .hero-text-group > *:nth-child(1) { animation-delay: 0.1s; }
+    .hero-text-group > *:nth-child(2) { animation-delay: 0.22s; }
+    .hero-text-group > *:nth-child(3) { animation-delay: 0.34s; }
+    .hero-text-group > *:nth-child(4) { animation-delay: 0.46s; }
+
+    .hero-visual { animation: fade-up 0.7s 0.3s ease both; }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════ NAV ════════════════ -->
+  <nav class="nav-wrap" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">Flow<span>OS</span></a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#stats">Stats</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#footer">Contact</a></li>
+      </ul>
+      <a href="#" class="nav-cta">Get Started →</a>
+    </div>
+  </nav>
+
+
+  <!-- ════════════════ HERO ════════════════ -->
+  <section class="hero-section" aria-label="Hero">
+    <div class="hero-orb-1" aria-hidden="true"></div>
+    <div class="hero-orb-2" aria-hidden="true"></div>
+    <div class="hero-orb-3" aria-hidden="true"></div>
+    <div class="hero-grid"  aria-hidden="true"></div>
+
+    <div class="hero-inner">
+
+      <!-- Left: Text -->
+      <div class="hero-text-group">
+        <div class="hero-tag">
+          <span class="hero-tag-dot" aria-hidden="true"></span>
+          Now in public beta
+        </div>
+
+        <h1 class="hero-heading">
+          Orchestrate Work<br />
+          at <span class="line-accent">Machine Speed</span>
+        </h1>
+
+        <p class="hero-desc">
+          FlowOS unifies tasks, automations, and team communication into one intelligent workspace — so your team ships faster without the chaos.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#" class="btn-primary">Start Free Trial</a>
+          <a href="#features" class="btn-secondary">Explore Features</a>
+        </div>
+      </div>
+
+      <!-- Right: Dashboard illustration -->
+      <div class="hero-visual">
+        <div class="hero-dashboard" role="img" aria-label="FlowOS dashboard preview">
+          <div class="dash-titlebar">
+            <div class="dash-dot" style="background:#ef4444;"></div>
+            <div class="dash-dot" style="background:#f59e0b;"></div>
+            <div class="dash-dot" style="background:#22c55e;"></div>
+            <span style="margin-left:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#3d5570;">flowos.app / dashboard</span>
+          </div>
+          <div class="dash-body">
+            <!-- KPI row -->
+            <div class="dash-row">
+              <div class="dash-card-sm">
+                <div class="dash-label">Tasks Done</div>
+                <div class="dash-value teal">84%</div>
+                <div class="dash-bar-wrap">
+                  <div class="dash-bar" style="width:84%;"></div>
+                </div>
+              </div>
+              <div class="dash-card-sm">
+                <div class="dash-label">Sprint Velocity</div>
+                <div class="dash-value amber">+32%</div>
+                <div class="dash-bar-wrap">
+                  <div class="dash-bar" style="width:62%;background:linear-gradient(90deg,var(--amber),#fb923c);"></div>
+                </div>
+              </div>
+              <div class="dash-card-sm">
+                <div class="dash-label">Active Users</div>
+                <div class="dash-value" style="color:#e8f0f7;">2,481</div>
+                <div class="dash-bar-wrap">
+                  <div class="dash-bar" style="width:90%;"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Tasks -->
+            <div class="dash-task-row">
+              <div class="dash-task-check done"></div>
+              <span class="dash-task-text">Finalize Q3 roadmap</span>
+              <span class="dash-task-badge">Done</span>
+            </div>
+            <div class="dash-task-row">
+              <div class="dash-task-check done"></div>
+              <span class="dash-task-text">Deploy CI/CD pipeline</span>
+              <span class="dash-task-badge">Done</span>
+            </div>
+            <div class="dash-task-row">
+              <div class="dash-task-check"></div>
+              <span class="dash-task-text">Review design system tokens</span>
+              <span class="dash-task-badge amber">In Progress</span>
+            </div>
+            <div class="dash-task-row">
+              <div class="dash-task-check"></div>
+              <span class="dash-task-text">Customer onboarding flow</span>
+              <span class="dash-task-badge amber">Review</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════ FEATURES ════════════════ -->
+  <section class="features-section section-pad" id="features" aria-labelledby="features-heading">
+    <div class="container">
+
+      <header class="section-header">
+        <p class="section-eyebrow">What You Get</p>
+        <h2 class="section-title" id="features-heading">
+          Every tool your team needs,<br />finally in one place.
+        </h2>
+        <p class="section-sub">
+          FlowOS was built from the ground up to eliminate the context switching that kills deep work.
+        </p>
+      </header>
+
+      <div class="features-grid">
+
+        <!-- 1. Task Automation -->
+        <article class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Smart Task Automation</h3>
+          <p class="feature-desc">Build no-code automation rules that trigger on any event — assign tasks, send alerts, and update statuses without lifting a finger.</p>
+        </article>
+
+        <!-- 2. Real-time Collaboration -->
+        <article class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Real-Time Collaboration</h3>
+          <p class="feature-desc">See your teammates' cursors, comments, and edits live. Every change is synced instantly so everyone works from the single source of truth.</p>
+        </article>
+
+        <!-- 3. Analytics Dashboard -->
+        <article class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Advanced Analytics</h3>
+          <p class="feature-desc">Real-time dashboards that surface team velocity, bottlenecks, and workload distribution so you can make data-driven decisions fast.</p>
+        </article>
+
+        <!-- 4. Workflow Builder -->
+        <article class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="3" y1="15" x2="21" y2="15"/>
+              <line x1="9" y1="3" x2="9" y2="21"/>
+              <line x1="15" y1="3" x2="15" y2="21"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Visual Workflow Builder</h3>
+          <p class="feature-desc">Drag-and-drop pipeline editor lets you map out any process — from sprint planning to customer onboarding — with zero code required.</p>
+        </article>
+
+        <!-- 5. Integrations -->
+        <article class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">1,000+ Integrations</h3>
+          <p class="feature-desc">Connect Slack, GitHub, Jira, Salesforce, and hundreds more. FlowOS sits at the center of your stack, not in a corner of it.</p>
+        </article>
+
+        <!-- 6. Security & Permissions -->
+        <article class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Enterprise-Grade Security</h3>
+          <p class="feature-desc">SOC 2 Type II compliant with role-based access control, SSO, end-to-end encryption, and full audit logs baked in from day one.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════ STATS ════════════════ -->
+  <section class="stats-section section-pad" id="stats" aria-labelledby="stats-heading">
+    <div class="stats-bg-lines" aria-hidden="true"></div>
+    <div class="container">
+
+      <header class="section-header">
+        <p class="section-eyebrow">By the Numbers</p>
+        <h2 class="section-title" id="stats-heading">Trusted by teams<br />moving fast.</h2>
+      </header>
+
+      <div class="stats-grid">
+
+        <div class="stat-item">
+          <div class="stat-number c-teal">48k+</div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">Active Teams</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-number c-amber">3.2M</div>
+          <div class="stat-divider" style="background:linear-gradient(90deg,var(--amber),transparent);"></div>
+          <div class="stat-label">Tasks Completed Daily</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-number c-teal">99.98%</div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">Uptime SLA</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-number c-amber">4.9★</div>
+          <div class="stat-divider" style="background:linear-gradient(90deg,var(--amber),transparent);"></div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════ TESTIMONIALS ════════════════ -->
+  <section class="testimonials-section section-pad" id="testimonials" aria-labelledby="testimonials-heading">
+    <div class="container">
+
+      <header class="section-header">
+        <p class="section-eyebrow">What Teams Say</p>
+        <h2 class="section-title" id="testimonials-heading">The teams who switched<br />never looked back.</h2>
+        <p class="section-sub">From startups to Fortune 500s, FlowOS changes how work gets done.</p>
+      </header>
+
+      <div class="testimonials-grid">
+
+        <!-- Testimonial 1 -->
+        <article class="testimonial-card">
+          <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.626.41-2.223.315-.597.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.19-.58.41-.78.66-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3zm9.8 0c0-.88-.23-1.618-.69-2.217-.326-.42-.768-.69-1.327-.82-.55-.12-1.07-.13-1.54-.02-.16-.95.1-1.63.41-2.22.31-.6.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.18-.58.4-.78.65-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3z"/>
+          </svg>
+
+          <div class="stars" aria-label="5 stars">
+            <span class="star">★</span><span class="star">★</span>
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+
+          <blockquote class="testimonial-text">
+            "FlowOS cut our sprint planning from 3 hours to 40 minutes. The automation engine alone paid for an entire year's subscription in the first month. Our engineering team has never been this aligned."
+          </blockquote>
+
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <div class="testimonial-avatar-inner" aria-hidden="true">RK</div>
+            </div>
+            <div>
+              <div class="testimonial-name">Riya Kapoor</div>
+              <div class="testimonial-role">VP of Engineering — Meridian Labs</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Testimonial 2 -->
+        <article class="testimonial-card">
+          <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.626.41-2.223.315-.597.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.19-.58.41-.78.66-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3zm9.8 0c0-.88-.23-1.618-.69-2.217-.326-.42-.768-.69-1.327-.82-.55-.12-1.07-.13-1.54-.02-.16-.95.1-1.63.41-2.22.31-.6.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.18-.58.4-.78.65-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3z"/>
+          </svg>
+
+          <div class="stars" aria-label="5 stars">
+            <span class="star">★</span><span class="star">★</span>
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+
+          <blockquote class="testimonial-text">
+            "We manage 12 client accounts simultaneously. Before FlowOS, we lost work in Slack threads and spreadsheets. Now every deliverable has an owner, a deadline, and a status — and I sleep better because of it."
+          </blockquote>
+
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <div class="testimonial-avatar-inner" aria-hidden="true">JT</div>
+            </div>
+            <div>
+              <div class="testimonial-name">James Thornton</div>
+              <div class="testimonial-role">Operations Director — Apex Creative</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Testimonial 3 -->
+        <article class="testimonial-card">
+          <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.626.41-2.223.315-.597.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.19-.58.41-.78.66-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3zm9.8 0c0-.88-.23-1.618-.69-2.217-.326-.42-.768-.69-1.327-.82-.55-.12-1.07-.13-1.54-.02-.16-.95.1-1.63.41-2.22.31-.6.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.18-.58.4-.78.65-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3z"/>
+          </svg>
+
+          <div class="stars" aria-label="4 stars">
+            <span class="star">★</span><span class="star">★</span>
+            <span class="star">★</span><span class="star">★</span>
+            <span style="color:var(--text-faint);font-size:0.9rem;">★</span>
+          </div>
+
+          <blockquote class="testimonial-text">
+            "The analytics dashboard gave us visibility we didn't know we were missing. We spotted a recurring bottleneck in QA within the first week and shipped a fix that saved us 6 hours per release cycle."
+          </blockquote>
+
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <div class="testimonial-avatar-inner" aria-hidden="true">SL</div>
+            </div>
+            <div>
+              <div class="testimonial-name">Sofia Lin</div>
+              <div class="testimonial-role">CTO — NorthStack Technologies</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Testimonial 4 -->
+        <article class="testimonial-card">
+          <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.626.41-2.223.315-.597.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.19-.58.41-.78.66-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3zm9.8 0c0-.88-.23-1.618-.69-2.217-.326-.42-.768-.69-1.327-.82-.55-.12-1.07-.13-1.54-.02-.16-.95.1-1.63.41-2.22.31-.6.68-1.02 1.08-1.29.15-.1.24-.25.28-.41.05-.18 0-.37-.1-.52-.16-.22-.39-.33-.63-.31-.33.03-.67.17-.99.35-.32.18-.58.4-.78.65-.43.53-.75 1.2-.96 1.98-.2.78-.3 1.6-.3 2.45 0 1.3.32 2.3.96 3.02.63.7 1.47 1.06 2.52 1.06 1.02 0 1.79-.29 2.32-.88.53-.58.8-1.35.8-2.3z"/>
+          </svg>
+
+          <div class="stars" aria-label="5 stars">
+            <span class="star">★</span><span class="star">★</span>
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+
+          <blockquote class="testimonial-text">
+            "Onboarded 40 remote employees across three time zones in a single afternoon. The permission system is nuanced enough for enterprise needs but never gets in the way. Exactly what we needed."
+          </blockquote>
+
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <div class="testimonial-avatar-inner" aria-hidden="true">MA</div>
+            </div>
+            <div>
+              <div class="testimonial-name">Marcus Alvarez</div>
+              <div class="testimonial-role">Head of Product — Vanta Systems</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer class="footer-section" id="footer" role="contentinfo">
+    <div class="container">
+
+      <div class="footer-top">
+        <div class="footer-grid">
+
+          <!-- Brand column -->
+          <div>
+            <a href="#" class="footer-brand-name">Flow<span>OS</span></a>
+            <p class="footer-tagline">
+              The intelligent workflow platform for modern teams. Ship faster, stay aligned, and never lose context again.
+            </p>
+            <div class="footer-socials" role="list" aria-label="Social media links">
+
+              <!-- Twitter / X -->
+              <a href="#" class="social-icon" aria-label="Follow us on X" role="listitem">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+
+              <!-- LinkedIn -->
+              <a href="#" class="social-icon" aria-label="Connect on LinkedIn" role="listitem">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
+
+              <!-- GitHub -->
+              <a href="#" class="social-icon" aria-label="View us on GitHub" role="listitem">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+              </a>
+
+              <!-- YouTube -->
+              <a href="#" class="social-icon" aria-label="Watch us on YouTube" role="listitem">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+              </a>
+
+            </div>
+          </div>
+
+          <!-- Product links -->
+          <nav aria-label="Product links">
+            <h3 class="footer-col-title">Product</h3>
+            <ul class="footer-links">
+              <li><a href="#">Features</a></li>
+              <li><a href="#">Integrations</a></li>
+              <li><a href="#">Changelog</a></li>
+              <li><a href="#">Pricing</a></li>
+              <li><a href="#">Status</a></li>
+            </ul>
+          </nav>
+
+          <!-- Company links -->
+          <nav aria-label="Company links">
+            <h3 class="footer-col-title">Company</h3>
+            <ul class="footer-links">
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Press Kit</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </nav>
+
+          <!-- Contact info -->
+          <address style="font-style:normal;">
+            <h3 class="footer-col-title">Contact</h3>
+            <div class="footer-contact-item">
+              <svg class="footer-contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span class="footer-contact-text">hello@flowos.app</span>
+            </div>
+            <div class="footer-contact-item">
+              <svg class="footer-contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.82A16 16 0 0 0 16 16.91l.87-.87a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <span class="footer-contact-text">+1 (800) 555-FLOW</span>
+            </div>
+            <div class="footer-contact-item">
+              <svg class="footer-contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span class="footer-contact-text">340 Pine Street, Suite 800<br/>San Francisco, CA 94104</span>
+            </div>
+          </address>
+
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 FlowOS, Inc. All rights reserved.</p>
+        <nav class="footer-legal" aria-label="Legal links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Settings</a>
+        </nav>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>
