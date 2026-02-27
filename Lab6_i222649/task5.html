@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Counter App</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#eef1f5;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.card{
+    background:#fff;
+    padding:25px 30px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    text-align:center;
+    width:300px;
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+#count{
+    font-size:48px;
+    margin:20px 0;
+    color:#4a6fdc;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+button{
+    padding:10px 14px;
+    border:none;
+    border-radius:6px;
+    background:#4a6fdc;
+    color:#fff;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Counter Application</h2>
+    <div id="count">0</div>
+
+    <div class="buttons">
+        <button id="inc">Increment</button>
+        <button id="dec">Decrement</button>
+        <button id="reset">Reset</button>
+    </div>
+</div>
+
+<script>
+let count=0;
+const display=document.getElementById("count");
+
+document.getElementById("inc").onclick=()=>{
+    count++;
+    display.textContent=count;
+};
+
+document.getElementById("dec").onclick=()=>{
+    count--;
+    display.textContent=count;
+};
+
+document.getElementById("reset").onclick=()=>{
+    count=0;
+    display.textContent=count;
+};
+</script>
+
+</body>
+</html>

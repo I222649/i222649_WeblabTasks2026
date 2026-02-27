@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todo List</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#eef1f5;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    background:#fff;
+    width:350px;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.input-group{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+
+button{
+    padding:10px 14px;
+    border:none;
+    border-radius:6px;
+    background:#4a6fdc;
+    color:#fff;
+    cursor:pointer;
+}
+
+ul{
+    list-style:none;
+    margin-top:15px;
+}
+
+li{
+    background:#f4f6fb;
+    padding:10px 12px;
+    margin-bottom:8px;
+    border-radius:6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:0.2s;
+}
+
+li:hover{
+    background:#e8ecf8;
+}
+
+.delete{
+    cursor:pointer;
+    color:#dc3545;
+    font-weight:bold;
+    font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Todo List</h2>
+
+    <div class="input-group">
+        <input type="text" id="taskInput" placeholder="Enter task">
+        <button id="addBtn">Add</button>
+    </div>
+
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+const input=document.getElementById("taskInput");
+const addBtn=document.getElementById("addBtn");
+const list=document.getElementById("taskList");
+
+function addTask(){
+    const text=input.value.trim();
+    if(text==="") return;
+
+    const li=document.createElement("li");
+    li.textContent=text;
+
+    const del=document.createElement("span");
+    del.textContent="×";
+    del.className="delete";
+
+    del.onclick=()=>li.remove();
+
+    li.appendChild(del);
+    list.appendChild(li);
+
+    input.value="";
+}
+
+addBtn.addEventListener("click",addTask);
+input.addEventListener("keypress",e=>{
+    if(e.key==="Enter") addTask();
+});
+</script>
+
+</body>
+</html>
