@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResQLink – Disaster Relief Coordination</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">⛑</span>
+      <span class="brand-name">ResQLink</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#" class="nav-link active">Dashboard</a>
+      <a href="#" class="nav-link">Tasks</a>
+      <a href="#" class="nav-link">Volunteers</a>
+    </nav>
+    <div class="nav-user">Coordinator: Admin</div>
+  </header>
+
+  <!-- STATS -->
+  <section class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Active Tasks</div>
+      <div class="stat-value" id="stat-active">2</div>
+    </div>
+    <div class="stat-card critical-stat">
+      <div class="stat-label">Critical</div>
+      <div class="stat-value" id="stat-critical">1</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Volunteers <span class="info-badge">ℹ</span></div>
+      <div class="stat-value" id="stat-volunteers">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Completed Today</div>
+      <div class="stat-value" id="stat-completed">1</div>
+    </div>
+  </section>
+
+  <!-- MAIN LAYOUT -->
+  <main class="main-layout">
+
+    <!-- LEFT: TASKS PANEL -->
+    <div class="tasks-panel">
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="priority-tabs">
+          <button class="pill active" data-priority="all">All</button>
+          <button class="pill" data-priority="critical">Critical</button>
+          <button class="pill" data-priority="high">High</button>
+          <button class="pill" data-priority="medium">Medium</button>
+        </div>
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search tasks..." autocomplete="off" />
+        </div>
+      </div>
+
+      <!-- TASK GRID -->
+      <div class="task-grid" id="task-grid">
+        <!-- Cards injected by JS -->
+      </div>
+
+      <!-- FAB -->
+      <button class="fab" id="fab-new-task" title="New Task" aria-label="Create new task">+</button>
+      <div class="fab-label">New Task</div>
+    </div>
+
+    <!-- RIGHT: VOLUNTEERS SIDEBAR -->
+    <aside class="volunteers-sidebar">
+      <h3 class="sidebar-heading">Available Volunteers</h3>
+      <div class="volunteer-list" id="volunteer-list">
+        <!-- Cards injected by JS -->
+      </div>
+      <button class="btn-register" id="btn-register-vol">+ Register Volunteer</button>
+    </aside>
+  </main>
+
+  <!-- ========== CREATE TASK MODAL ========== -->
+  <div class="modal-backdrop" id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal" id="task-modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Create New Task</h2>
+        <button class="modal-close" id="modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Title -->
+        <div class="form-group">
+          <label for="task-title">Task Title <span class="req">*</span> <span class="annot">⑨</span></label>
+          <input type="text" id="task-title" placeholder="e.g. Food Distribution — Zone C" autocomplete="off" />
+          <span class="field-error" id="title-error"></span>
+        </div>
+
+        <div class="form-row">
+          <!-- Priority -->
+          <div class="form-group">
+            <label for="task-priority">Priority <span class="annot">⑩</span></label>
+            <select id="task-priority">
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+          <!-- Min Volunteers -->
+          <div class="form-group">
+            <label for="task-min-vol">Min. Volunteers</label>
+            <input type="number" id="task-min-vol" value="2" min="1" />
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="task-desc">Description <span class="req">*</span> <span class="annot">⑪</span></label>
+          <textarea id="task-desc" rows="4" placeholder="Task details, location, special requirements... (max 200 chars)" maxlength="200"></textarea>
+          <div class="char-counter"><span id="char-count">0</span>/200</div>
+          <span class="field-error" id="desc-error"></span>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-group">
+          <label>Required Skills</label>
+          <div class="skills-grid">
+            <label class="skill-check"><input type="checkbox" name="skill" value="First Aid" /> First Aid</label>
+            <label class="skill-check"><input type="checkbox" name="skill" value="Logistics" checked /> Logistics</label>
+            <label class="skill-check"><input type="checkbox" name="skill" value="Medical" /> Medical</label>
+            <label class="skill-check"><input type="checkbox" name="skill" value="Engineering" /> Engineering</label>
+            <label class="skill-check"><input type="checkbox" name="skill" value="Search & Rescue" /> Search & Rescue</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" id="modal-cancel">Cancel</button>
+        <button class="btn-create" id="btn-create-task">Create Task <span class="annot">⑫</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== REGISTER VOLUNTEER MODAL ========== -->
+  <div class="modal-backdrop" id="vol-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="vol-modal-title" hidden>
+    <div class="modal" id="vol-modal">
+      <div class="modal-header">
+        <h2 id="vol-modal-title">Register Volunteer</h2>
+        <button class="modal-close" id="vol-modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="vol-name">Full Name <span class="req">*</span></label>
+          <input type="text" id="vol-name" placeholder="Ahmad Khan" autocomplete="off" />
+          <span class="field-error" id="vol-name-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="vol-email">Email <span class="req">*</span></label>
+          <input type="email" id="vol-email" placeholder="volunteer@example.com" autocomplete="off" />
+          <span class="field-error" id="vol-email-error"></span>
+        </div>
+        <div class="form-group">
+          <label>Skills</label>
+          <div class="skills-grid">
+            <label class="skill-check"><input type="checkbox" name="vol-skill" value="First Aid" /> First Aid</label>
+            <label class="skill-check"><input type="checkbox" name="vol-skill" value="Medical" /> Medical</label>
+            <label class="skill-check"><input type="checkbox" name="vol-skill" value="Logistics" /> Logistics</label>
+            <label class="skill-check"><input type="checkbox" name="vol-skill" value="Engineering" /> Engineering</label>
+            <label class="skill-check"><input type="checkbox" name="vol-skill" value="Search & Rescue" /> Search & Rescue</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="vol-modal-cancel">Cancel</button>
+        <button class="btn-create" id="btn-register-submit">Register</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
